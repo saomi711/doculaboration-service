@@ -1,0 +1,40 @@
+services:
+  nginx:
+    restart: always
+    # Add SSL configuration here if needed
+    # volumes:
+    #   - ./ssl:/etc/nginx/ssl:ro
+
+  frontend:
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_API_URL=/api
+
+  api:
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DEBUG=false
+    # Scale API instances for load balancing
+    # deploy:
+    #   replicas: 2
+
+  worker:
+    # Scale workers for better performance
+    deploy:
+      replicas: 4
+
+  redis:
+    # Enable persistence in production
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+  rabbitmq:
+    # Enable persistence in production
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+volumes:
+  redis_data:
+  rabbitmq_data:

@@ -1,0 +1,106 @@
+services:
+  # ------------------------------------------------------------
+  # 🌐 Nginx - Reverse Proxy & Load Balancer
+  # ------------------------------------------------------------
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    container_name: doculaboration_nginx
+    ports:
+      - "9000:80"   # Changed from 80 to 9000
+      - "9443:443"  # Changed from 443 to 9443 for future SSL support
+    depends_on:
+      - api
+      - frontend
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+
+  # ------------------------------------------------------------
+  # 🎨 Frontend - React App
+  # ------------------------------------------------------------
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: doculaboration_frontend
+    environment:
+      - REACT_APP_API_URL=/api  # Use relative URL through nginx
+    # No external ports - accessed through nginx
+    restart: unless-stopped
+
+  # ------------------------------------------------------------
+  # 1️⃣  API – only FastAPI + Celery client
+  # ------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: doculaboration_backend
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    # No external ports - accessed through nginx
+    depends_on:
+      - rabbitmq
+      - redis
+    volumes:
+      - ./out:/app/out   # shared folder for generated files
+    restart: unless-stopped
+
+  # ------------------------------------------------------------
+  # 2️⃣  Workers – can be scaled (2, 3, …) – they execute the script
+  # ------------------------------------------------------------
+  worker:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile
+    # container_name: doculaboration_worker
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - rabbitmq
+      - redis
+    volumes:
+      - ./out:/app/out   # same shared folder
+    restart: unless-stopped
+    # we don't expose any ports – workers are only reachable through RabbitMQ
+    # To run more workers:
+    #   docker compose up -d --scale worker=2
+
+  # ------------------------------------------------------------
+  # 3️⃣  Redis – cache + Celery results
+  # ------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"  # Keep exposed for debugging
+    restart: unless-stopped
+    # optional: persist to a local file for debugging
+    # volumes:
+    #   - redis_data:/data
+
+  # ------------------------------------------------------------
+  # 4️⃣  RabbitMQ (management UI on 15672)
+  # ------------------------------------------------------------
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672"   # management UI
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    restart: unless-stopped
+    # optional persistence
+    # volumes:
+    #   - rabbitmq_data:/var/lib/rabbitmq
+
+# volumes:
+  # optional named volumes for persistence
+  # redis_data:
+  # rabbitmq_data:

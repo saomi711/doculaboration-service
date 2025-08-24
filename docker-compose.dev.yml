@@ -1,0 +1,17 @@
+services:
+  # Development overrides
+  api:
+    ports:
+      - "9001:7000"  # Changed from 7000 to 9001 to avoid conflicts
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DEBUG=true
+
+  # For development, you can run React dev server locally
+  # and it will proxy to the API on port 7000
+  
+  # Optional: nginx for testing production-like setup
+  nginx:
+    ports:
+      - "9002:80"  # Changed from 8080 to 9002 to avoid conflicts
