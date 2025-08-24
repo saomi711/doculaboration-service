@@ -6,6 +6,35 @@ The full stack solution for doculaboration project
 
 Overwrite in case of any filename conflict.
 
+### Change the `generate_pdf` function inside `json-to-docx/src/doc/doc_util.py`
+```python
+def generate_pdf(docx_file, output_dir):
+    import os
+    import subprocess
+    pdf_path = os.path.join(output_dir, os.path.splitext(os.path.basename(docx_file))[0] + ".pdf")
+
+    if sys.platform == "win32":
+        import win32com.client
+        word = win32com.client.DispatchEx("Word.Application")
+        doc = word.Documents.Open(docx_file)
+        doc.SaveAs(pdf_path, FileFormat=17)  # wdFormatPDF
+        doc.Close()
+        word.Quit()
+
+    else:
+        # Use LibreOffice (needs `libreoffice` or `soffice` installed)
+        subprocess.run([
+            "libreoffice",
+            "--headless",
+            "--convert-to", "pdf",
+            "--outdir", output_dir,
+            docx_file
+        ], check=True)
+
+    return pdf_path
+
+```
+
 # doculaboration - Documentation Collaboration
 CRDT (gsheet, etc.) based documentation collaboration pipeline to generate editable (docx, odt, etc.) and printable (pdf, etc.) output from input data
 
