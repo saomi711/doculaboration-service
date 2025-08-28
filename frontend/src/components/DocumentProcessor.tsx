@@ -36,7 +36,7 @@ const DocumentProcessor: React.FC = () => {
     try {
       // Start the processing task
       const taskResponse = await ApiService.startProcessing(documentName);
-      
+
       if (taskResponse.message && taskResponse.message.includes('already running')) {
         setStatus(prev => ({
           ...prev,
@@ -55,7 +55,7 @@ const DocumentProcessor: React.FC = () => {
 
       // Start streaming logs
       startStreaming(taskResponse.task_id);
-      
+
       // Start polling for status
       startStatusPolling(taskResponse.task_id);
 
@@ -83,7 +83,7 @@ const DocumentProcessor: React.FC = () => {
     eventSource.onmessage = (event) => {
       const logLine = event.data;
       setStreamingLogs(prev => [...prev, logLine]);
-      
+
       // Update progress based on log content
       updateProgressFromLog(logLine);
     };
@@ -96,7 +96,7 @@ const DocumentProcessor: React.FC = () => {
 
   const updateProgressFromLog = (logLine: string) => {
     const line = logLine.toLowerCase();
-    
+
     if (line.includes('step 1') || line.includes('json from google sheet')) {
       setStatus(prev => ({ ...prev, progress: 25, stage: 'Generating JSON', message: logLine }));
     } else if (line.includes('step 2') || line.includes('generating odt')) {
@@ -116,7 +116,7 @@ const DocumentProcessor: React.FC = () => {
     const pollStatus = async () => {
       try {
         const taskStatus = await ApiService.getTaskStatus(taskId);
-        
+
         if (taskStatus.status === 'SUCCESS') {
           // Task completed successfully
           setStatus(prev => ({
@@ -136,7 +136,7 @@ const DocumentProcessor: React.FC = () => {
           };
 
           setProcessedDocument(processedDoc);
-          
+
           // Clean up
           if (eventSourceRef.current) {
             eventSourceRef.current.close();
@@ -154,7 +154,7 @@ const DocumentProcessor: React.FC = () => {
             message: 'Processing failed',
             stage: 'Error'
           }));
-          
+
           // Clean up
           if (eventSourceRef.current) {
             eventSourceRef.current.close();
@@ -164,7 +164,7 @@ const DocumentProcessor: React.FC = () => {
           }
         }
         // For PENDING and STARTED, continue polling
-        
+
       } catch (err) {
         console.error('Status polling error:', err);
       }
@@ -172,7 +172,7 @@ const DocumentProcessor: React.FC = () => {
 
     // Poll every 2 seconds
     statusPollingRef.current = setInterval(pollStatus, 2000);
-    
+
     // Initial poll
     pollStatus();
   };
@@ -230,6 +230,63 @@ const DocumentProcessor: React.FC = () => {
 
       {/* Connection Test */}
       <ConnectionTest />
+
+      {/* Usage Instructions Card */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+        <h3 className="text-lg font-semibold text-blue-800 mb-4 flex items-center">
+          <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+          </svg>
+          How to Use This Service
+        </h3>
+        <div className="space-y-4">
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
+              1
+            </div>
+            <div>
+              <p className="text-blue-800 font-medium">Share your Google Sheet with the service</p>
+              <div className="mt-2 bg-white border border-blue-200 rounded-md p-3">
+                <p className="text-sm text-gray-600 mb-2">Service Email:</p>
+                <div className="flex items-center space-x-2">
+                  <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-800 flex-1">
+                    spectrum-895@spectrum-221613.iam.gserviceaccount.com
+                  </code>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText('spectrum-895@spectrum-221613.iam.gserviceaccount.com');
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition duration-200"
+                    title="Copy email to clipboard"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
+              2
+            </div>
+            <div>
+              <p className="text-blue-800 font-medium">Copy the document name from your Google Sheet URL</p>
+              <p className="text-sm text-blue-600 mt-1">The document name is the name of your Google Sheet (not the URL).</p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
+              3
+            </div>
+            <div>
+              <p className="text-blue-800 font-medium">Paste the document name below and click "Process Document"</p>
+              <p className="text-sm text-blue-600 mt-1">The system will generate PDF, DOCX, ODT, and JSON formats</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Input Section */}
       <div className="mb-6">
@@ -303,7 +360,7 @@ const DocumentProcessor: React.FC = () => {
       {(status.isProcessing || status.message) && (
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-3">Processing Status</h3>
-          
+
           {status.isProcessing && (
             <div className="mb-4">
               <div className="flex justify-between text-sm text-gray-600 mb-1">
