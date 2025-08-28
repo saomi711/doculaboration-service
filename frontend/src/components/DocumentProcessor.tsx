@@ -271,6 +271,16 @@ const DocumentProcessor: React.FC = () => {
               2
             </div>
             <div className="flex-1 min-w-0">
+              <p className="text-blue-800 font-medium text-sm sm:text-base">Make sure the document has a TOC sheet</p>
+              <p className="text-xs sm:text-sm text-blue-600 mt-1">The document must contain a <code className="bg-blue-100 px-1 rounded text-xs">--toc</code> sheet as the first page</p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
+              3
+            </div>
+            <div className="flex-1 min-w-0">
               <p className="text-blue-800 font-medium text-sm sm:text-base">Copy the document name from your Google Sheet URL</p>
               <p className="text-xs sm:text-sm text-blue-600 mt-1">The document name is the name of your Google Sheet (not the URL).</p>
             </div>
@@ -278,7 +288,7 @@ const DocumentProcessor: React.FC = () => {
 
           <div className="flex items-start space-x-3">
             <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
-              3
+              4
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-blue-800 font-medium text-sm sm:text-base">Paste the document name below and click "Process Document"</p>
