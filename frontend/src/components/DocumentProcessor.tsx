@@ -223,8 +223,8 @@ const DocumentProcessor: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-lg">
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 text-center">
         Document Processor
       </h1>
 
@@ -232,9 +232,9 @@ const DocumentProcessor: React.FC = () => {
       <ConnectionTest />
 
       {/* Usage Instructions Card */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-        <h3 className="text-lg font-semibold text-blue-800 mb-4 flex items-center">
-          <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 sm:p-6 mb-6">
+        <h3 className="text-base sm:text-lg font-semibold text-blue-800 mb-4 flex items-center">
+          <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
           </svg>
           How to Use This Service
@@ -244,19 +244,19 @@ const DocumentProcessor: React.FC = () => {
             <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
               1
             </div>
-            <div>
-              <p className="text-blue-800 font-medium">Share your Google Sheet with the service</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-blue-800 font-medium text-sm sm:text-base">Share your Google Sheet with the service</p>
               <div className="mt-2 bg-white border border-blue-200 rounded-md p-3">
-                <p className="text-sm text-gray-600 mb-2">Service Email:</p>
-                <div className="flex items-center space-x-2">
-                  <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-800 flex-1">
+                <p className="text-xs sm:text-sm text-gray-600 mb-2">Service Email:</p>
+                <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                  <code className="bg-gray-100 px-2 py-1 rounded text-xs sm:text-sm font-mono text-gray-800 break-all sm:flex-1">
                     spectrum-895@spectrum-221613.iam.gserviceaccount.com
                   </code>
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText('spectrum-895@spectrum-221613.iam.gserviceaccount.com');
                     }}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition duration-200"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs sm:text-sm transition duration-200 flex-shrink-0"
                     title="Copy email to clipboard"
                   >
                     Copy
@@ -270,9 +270,9 @@ const DocumentProcessor: React.FC = () => {
             <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
               2
             </div>
-            <div>
-              <p className="text-blue-800 font-medium">Copy the document name from your Google Sheet URL</p>
-              <p className="text-sm text-blue-600 mt-1">The document name is the name of your Google Sheet (not the URL).</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-blue-800 font-medium text-sm sm:text-base">Copy the document name from your Google Sheet URL</p>
+              <p className="text-xs sm:text-sm text-blue-600 mt-1">The document name is the name of your Google Sheet (not the URL).</p>
             </div>
           </div>
 
@@ -280,9 +280,9 @@ const DocumentProcessor: React.FC = () => {
             <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
               3
             </div>
-            <div>
-              <p className="text-blue-800 font-medium">Paste the document name below and click "Process Document"</p>
-              <p className="text-sm text-blue-600 mt-1">The system will generate PDF, DOCX, ODT, and JSON formats</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-blue-800 font-medium text-sm sm:text-base">Paste the document name below and click "Process Document"</p>
+              <p className="text-xs sm:text-sm text-blue-600 mt-1">The system will generate PDF, DOCX, ODT, and JSON formats</p>
             </div>
           </div>
         </div>
@@ -359,11 +359,11 @@ const DocumentProcessor: React.FC = () => {
       {/* Processing Status Window */}
       {(status.isProcessing || status.message) && (
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-3">Processing Status</h3>
+          <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3">Processing Status</h3>
 
           {status.isProcessing && (
             <div className="mb-4">
-              <div className="flex justify-between text-sm text-gray-600 mb-1">
+              <div className="flex justify-between text-xs sm:text-sm text-gray-600 mb-1">
                 <span>Progress</span>
                 <span>{status.progress}%</span>
               </div>
@@ -377,31 +377,33 @@ const DocumentProcessor: React.FC = () => {
           )}
 
           <div className="space-y-2 mb-4">
-            <div className="flex items-center">
-              <span className="text-sm font-medium text-gray-700 mr-2">Stage:</span>
-              <span className="text-sm text-gray-600">{status.stage}</span>
+            <div className="flex flex-col sm:flex-row sm:items-center">
+              <span className="text-xs sm:text-sm font-medium text-gray-700 sm:mr-2">Stage:</span>
+              <span className="text-xs sm:text-sm text-gray-600">{status.stage}</span>
             </div>
-            <div className="flex items-center">
-              <span className="text-sm font-medium text-gray-700 mr-2">Status:</span>
-              <span className="text-sm text-gray-600">{status.message}</span>
-              {status.isProcessing && (
-                <div className="ml-2 animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-              )}
+            <div className="flex flex-col sm:flex-row sm:items-center">
+              <span className="text-xs sm:text-sm font-medium text-gray-700 sm:mr-2">Status:</span>
+              <div className="flex items-center">
+                <span className="text-xs sm:text-sm text-gray-600 break-words">{status.message}</span>
+                {status.isProcessing && (
+                  <div className="ml-2 animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 flex-shrink-0"></div>
+                )}
+              </div>
             </div>
             {status.taskId && (
-              <div className="flex items-center">
-                <span className="text-sm font-medium text-gray-700 mr-2">Task ID:</span>
-                <span className="text-xs text-gray-500 font-mono">{status.taskId}</span>
+              <div className="flex flex-col sm:flex-row sm:items-center">
+                <span className="text-xs sm:text-sm font-medium text-gray-700 sm:mr-2">Task ID:</span>
+                <span className="text-xs text-gray-500 font-mono break-all">{status.taskId}</span>
               </div>
             )}
           </div>
 
           {/* Streaming Logs */}
           {streamingLogs.length > 0 && (
-            <div className="bg-black text-green-400 p-3 rounded-md font-mono text-xs max-h-40 overflow-y-auto">
+            <div className="bg-black text-green-400 p-2 sm:p-3 rounded-md font-mono text-xs max-h-32 sm:max-h-40 overflow-y-auto">
               <div className="text-gray-400 mb-2">Live Output:</div>
               {streamingLogs.slice(-20).map((log, index) => (
-                <div key={index} className="whitespace-pre-wrap">
+                <div key={index} className="whitespace-pre-wrap break-words">
                   {log}
                 </div>
               ))}
@@ -413,19 +415,19 @@ const DocumentProcessor: React.FC = () => {
       {/* Processed Document Info */}
       {processedDocument && (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <h3 className="text-lg font-semibold text-green-800 mb-3">Document Ready</h3>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
+          <h3 className="text-base sm:text-lg font-semibold text-green-800 mb-3">Document Ready</h3>
+          <div className="space-y-2 text-xs sm:text-sm">
+            <div className="flex flex-col sm:flex-row sm:justify-between">
               <span className="font-medium text-green-700">Name:</span>
-              <span className="text-green-600">{processedDocument.name}</span>
+              <span className="text-green-600 break-words">{processedDocument.name}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row sm:justify-between">
               <span className="font-medium text-green-700">Formats:</span>
               <span className="text-green-600 uppercase">{processedDocument.formats.join(', ')}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row sm:justify-between">
               <span className="font-medium text-green-700">Created:</span>
-              <span className="text-green-600">
+              <span className="text-green-600 break-words">
                 {new Date(processedDocument.createdAt).toLocaleString()}
               </span>
             </div>
